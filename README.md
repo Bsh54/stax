@@ -2,10 +2,10 @@
 
 **Yield-bearing tokenized stocks on Solana.**
 
-Tokenized stocks (e.g. NVDAx, AAPLx) currently sit idle in wallets — holding them
-onchain earns nothing. Stax turns a tokenized stock into a productive asset: deposit
-your stock, keep your price exposure, and earn yield on top — something a traditional
-brokerage cannot offer.
+Tokenized stocks (e.g. NVDAx, AAPLx) currently sit idle in wallets: holding them
+onchain earns nothing. Stax turns a tokenized stock into a productive asset. You
+deposit your stock, keep your price exposure, and earn yield on top, something a
+traditional brokerage cannot offer.
 
 Built for the [Stocklana](https://hackathons.solana.com/hackathons/stocklana) hackathon
 (track: *Credit and yield*).
@@ -14,7 +14,7 @@ Built for the [Stocklana](https://hackathons.solana.com/hackathons/stocklana) ha
 
 1. **Deposit** a tokenized stock into its vault and receive share tokens.
 2. The vault uses the stock as collateral to borrow stablecoins on a lending market
-   and deploys them into a mature stablecoin yield strategy *(harvest — in progress)*.
+   and deploys them into a mature stablecoin yield strategy *(harvest, in progress)*.
 3. The net spread accrues to the vault, so each share is redeemable for more stock over
    time.
 4. **Withdraw** at any time by burning shares.
@@ -27,13 +27,13 @@ mints (Scaled UI Amount), and all accounting is done in raw token units.
 
 | Component | State |
 | --- | --- |
-| Vault core (`initialize_vault`, `deposit`, `withdraw`) | ✅ implemented + tested |
-| Share math (virtual offset, checked u128) | ✅ unit-tested |
-| Harvest (yield accrual, authority-gated) | ✅ implemented |
-| Kamino CPI — deposit stock as collateral (`init_kamino_position`, `deploy_to_kamino`) | ✅ implemented |
-| Kamino CPI — borrow stablecoin against collateral | 🚧 in progress |
-| Integration tests (LiteSVM / Surfpool mainnet fork) | 🚧 in progress |
-| Frontend | 🚧 planned |
+| Vault core (`initialize_vault`, `deposit`, `withdraw`) | implemented + tested |
+| Share math (virtual offset, checked u128) | unit-tested |
+| Harvest (yield accrual, authority-gated) | implemented |
+| Kamino CPI: deposit stock as collateral (`init_kamino_position`, `deploy_to_kamino`) | implemented |
+| Kamino CPI: borrow stablecoin against collateral (`borrow_from_kamino`) | implemented |
+| Integration tests (LiteSVM / Surfpool mainnet fork) | in progress |
+| Frontend | planned |
 
 ## Repository layout
 
@@ -43,11 +43,16 @@ programs/stax/src/
 ├── constants.rs        # PDA seeds and virtual-offset constants
 ├── error.rs            # custom error codes
 ├── state.rs            # Vault account
+├── kamino.rs           # hand-built klend CPI layer (discriminators, invoke helper)
 ├── instructions/       # one handler per instruction
 │   ├── initialize_vault.rs
 │   ├── deposit.rs
-│   └── withdraw.rs
-└── utils/math.rs       # share <-> asset conversion (unit-tested)
+│   ├── withdraw.rs
+│   ├── harvest.rs
+│   ├── init_kamino_position.rs
+│   ├── deploy_to_kamino.rs
+│   └── borrow_from_kamino.rs
+└── utils/math.rs       # share to asset conversion (unit-tested)
 ```
 
 ## Build & test
@@ -67,6 +72,9 @@ cargo test -p stax    # run unit and integration tests
 | `deposit(amount, min_shares_out)` | Deposit stock, mint shares (with slippage protection). |
 | `withdraw(shares, min_assets_out)` | Burn shares, redeem the underlying stock. |
 | `harvest` | Sweep realized yield into the vault (authority only), raising the value of every share. |
+| `init_kamino_position(tag, id, lut)` | One-time Kamino setup: create the vault's obligation and user metadata (owned by the vault PDA). |
+| `deploy_to_kamino(amount)` | Supply the vault's stock to Kamino as obligation collateral. |
+| `borrow_from_kamino(amount)` | Borrow a stablecoin against the vault's Kamino collateral. |
 
 ## Security
 
@@ -74,6 +82,8 @@ cargo test -p stax    # run unit and integration tests
   stock mint, share mint, and stock vault.
 - Checked arithmetic everywhere; `overflow-checks` enabled in the release profile.
 - Cross-program calls validate the token program via the token interface.
+- Kamino positions (obligation and user metadata) are owned by the vault PDA, so only
+  this program can manage them.
 
 ## License
 

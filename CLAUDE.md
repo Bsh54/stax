@@ -1,7 +1,7 @@
-# Stax — project rules
+# Stax project rules
 
 Yield-bearing tokenized stocks on Solana (Anchor program). Deposit a tokenized stock,
-mint ERC-4626-style shares, earn yield (harvest via a lending market — in progress).
+mint ERC-4626-style shares, earn yield (harvest via a lending market, in progress).
 
 ## Conventions
 - All code, comments, and commit messages in **English**.
@@ -25,7 +25,7 @@ cargo clippy -p stax
 
 ## Project-specific pitfalls
 - **`CpiContext::new` / `new_with_signer` take the program `Pubkey`** (not `AccountInfo`)
-  in this Anchor version — pass `ctx.accounts.token_program.key()`.
+  in this Anchor version, pass `ctx.accounts.token_program.key()`.
 - Tokenized stocks are **Token-2022 with Scaled UI Amount**: transact in **raw amounts**;
   the display multiplier is a frontend concern.
 - Use `token_interface` (not `token`) so both SPL Token and Token-2022 are supported.

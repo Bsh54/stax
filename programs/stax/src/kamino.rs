@@ -25,6 +25,7 @@ pub mod discriminator {
     pub const INIT_OBLIGATION: [u8; 8] = [251, 10, 231, 76, 27, 11, 159, 96];
     pub const DEPOSIT_RESERVE_LIQUIDITY_AND_OBLIGATION_COLLATERAL_V2: [u8; 8] =
         [216, 224, 191, 27, 204, 151, 102, 175];
+    pub const BORROW_OBLIGATION_LIQUIDITY_V2: [u8; 8] = [161, 128, 143, 245, 171, 199, 194, 6];
 }
 
 /// Build a klend instruction and dispatch it, signed by the vault PDA.

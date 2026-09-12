@@ -13,7 +13,7 @@ pub use instructions::*;
 
 declare_id!("DWqrx3j2gJYGEc4VfB1RjRtu4K8fx32Font6DWhckm6i");
 
-/// Stax — yield-bearing tokenized stocks on Solana.
+/// Stax: yield-bearing tokenized stocks on Solana.
 ///
 /// Deposit a tokenized stock, receive shares, and (in later phases) earn yield
 /// on an asset that would otherwise sit idle in a wallet.
@@ -59,5 +59,10 @@ pub mod stax {
     /// Deposit the vault's tokenized stock into Kamino as obligation collateral.
     pub fn deploy_to_kamino(ctx: Context<DeployToKamino>, amount: u64) -> Result<()> {
         instructions::deploy_to_kamino::handle_deploy_to_kamino(ctx, amount)
+    }
+
+    /// Borrow a stablecoin against the vault's Kamino collateral.
+    pub fn borrow_from_kamino(ctx: Context<BorrowFromKamino>, amount: u64) -> Result<()> {
+        instructions::borrow_from_kamino::handle_borrow_from_kamino(ctx, amount)
     }
 }
