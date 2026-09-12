@@ -75,4 +75,14 @@ pub mod stax {
     pub fn withdraw_from_kamino(ctx: Context<WithdrawFromKamino>, amount: u64) -> Result<()> {
         instructions::withdraw_from_kamino::handle_withdraw_from_kamino(ctx, amount)
     }
+
+    /// Supply the borrowed stablecoin into a Kamino reserve to earn yield.
+    pub fn supply_to_kamino(ctx: Context<SupplyToKamino>, amount: u64) -> Result<()> {
+        instructions::supply_to_kamino::handle_supply_to_kamino(ctx, amount)
+    }
+
+    /// Redeem the vault's Kamino reserve collateral back into stablecoin.
+    pub fn redeem_from_kamino(ctx: Context<RedeemFromKamino>, amount: u64) -> Result<()> {
+        instructions::redeem_from_kamino::handle_redeem_from_kamino(ctx, amount)
+    }
 }
