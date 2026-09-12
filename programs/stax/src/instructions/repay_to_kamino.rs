@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount};
 use crate::{
     constants::*,
     error::StaxError,
-    kamino::{discriminator, invoke_klend_signed},
+    kamino::{discriminator, farm_meta, invoke_klend_signed},
     state::Vault,
 };
 
@@ -58,10 +58,8 @@ pub struct RepayToKamino<'info> {
     /// CHECK: instructions sysvar; validated by klend.
     pub instruction_sysvar_account: UncheckedAccount<'info>,
     /// CHECK: klend farm user state (or klend program id when no farm); validated by klend.
-    #[account(mut)]
     pub obligation_farm_user_state: UncheckedAccount<'info>,
     /// CHECK: klend reserve farm state (or klend program id when no farm); validated by klend.
-    #[account(mut)]
     pub reserve_farm_state: UncheckedAccount<'info>,
     /// CHECK: klend lending market authority PDA; validated by klend.
     pub lending_market_authority: UncheckedAccount<'info>,
@@ -89,8 +87,8 @@ pub fn handle_repay_to_kamino(ctx: Context<RepayToKamino>, amount: u64) -> Resul
         AccountMeta::new(a.usdc_vault.key(), false), // user_source_liquidity
         AccountMeta::new_readonly(a.token_program.key(), false),
         AccountMeta::new_readonly(a.instruction_sysvar_account.key(), false),
-        AccountMeta::new(a.obligation_farm_user_state.key(), false),
-        AccountMeta::new(a.reserve_farm_state.key(), false),
+        farm_meta(a.obligation_farm_user_state.key()),
+        farm_meta(a.reserve_farm_state.key()),
         AccountMeta::new_readonly(a.lending_market_authority.key(), false),
         AccountMeta::new_readonly(a.farms_program.key(), false),
     ];

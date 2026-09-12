@@ -33,6 +33,19 @@ pub mod discriminator {
     pub const REDEEM_RESERVE_COLLATERAL: [u8; 8] = [234, 117, 181, 125, 185, 142, 220, 29];
 }
 
+/// Account meta for an optional klend farm account.
+///
+/// Farm accounts are optional in klend: when a reserve has no farm they are set to
+/// the klend program id and must stay read-only; a real farm state account is
+/// writable.
+pub fn farm_meta(key: Pubkey) -> AccountMeta {
+    if key == KLEND_PROGRAM_ID {
+        AccountMeta::new_readonly(key, false)
+    } else {
+        AccountMeta::new(key, false)
+    }
+}
+
 /// Build a klend instruction and dispatch it, signed by the vault PDA.
 ///
 /// `data` must already contain the 8-byte discriminator followed by the

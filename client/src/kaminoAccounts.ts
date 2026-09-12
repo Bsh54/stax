@@ -11,10 +11,6 @@ import {
   KaminoMarket,
   PROGRAM_ID as KLEND_PROGRAM_ID,
   lendingMarketAuthPda,
-  reserveLiqSupplyPda,
-  reserveFeeVaultPda,
-  reserveCollateralMintPda,
-  reserveCollateralSupplyPda,
   userMetadataPda,
   obligationFarmStatePda,
   getObligationPdaWithArgs,
@@ -57,10 +53,12 @@ async function resolveReserve(
   const res: any = arr[0];
   const state = res.state;
   const mint: Address = state.liquidity.mintPubkey;
-  const [reserveLiquiditySupply] = await reserveLiqSupplyPda(XSTOCKS_MARKET, mint, KLEND_PROGRAM_ID);
-  const [feeReceiver] = await reserveFeeVaultPda(XSTOCKS_MARKET, mint, KLEND_PROGRAM_ID);
-  const [collateralMint] = await reserveCollateralMintPda(XSTOCKS_MARKET, mint, KLEND_PROGRAM_ID);
-  const [collateralSupply] = await reserveCollateralSupplyPda(XSTOCKS_MARKET, mint, KLEND_PROGRAM_ID);
+  // Read the real vault addresses from the reserve state; they are not always the
+  // canonical PDAs, so deriving them can yield uninitialized accounts.
+  const reserveLiquiditySupply: Address = state.liquidity.supplyVault;
+  const feeReceiver: Address = state.liquidity.feeVault;
+  const collateralMint: Address = state.collateral.mintPubkey;
+  const collateralSupply: Address = state.collateral.supplyVault;
 
   const farmDebt: Address = state.farmDebt;
   const farmColl: Address = state.farmCollateral;

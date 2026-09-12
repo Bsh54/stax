@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount};
 use crate::{
     constants::*,
     error::StaxError,
-    kamino::{discriminator, invoke_klend_signed},
+    kamino::{discriminator, farm_meta, invoke_klend_signed},
     state::Vault,
 };
 
@@ -69,10 +69,8 @@ pub struct BorrowFromKamino<'info> {
     /// CHECK: instructions sysvar; validated by klend.
     pub instruction_sysvar_account: UncheckedAccount<'info>,
     /// CHECK: klend farm user state (or klend program id when no farm); validated by klend.
-    #[account(mut)]
     pub obligation_farm_user_state: UncheckedAccount<'info>,
     /// CHECK: klend reserve farm state (or klend program id when no farm); validated by klend.
-    #[account(mut)]
     pub reserve_farm_state: UncheckedAccount<'info>,
     /// CHECK: klend farms program (or klend program id when no farm); validated by klend.
     pub farms_program: UncheckedAccount<'info>,
@@ -101,8 +99,8 @@ pub fn handle_borrow_from_kamino(ctx: Context<BorrowFromKamino>, amount: u64) ->
         AccountMeta::new(a.referrer_token_state.key(), false),
         AccountMeta::new_readonly(a.token_program.key(), false),
         AccountMeta::new_readonly(a.instruction_sysvar_account.key(), false),
-        AccountMeta::new(a.obligation_farm_user_state.key(), false),
-        AccountMeta::new(a.reserve_farm_state.key(), false),
+        farm_meta(a.obligation_farm_user_state.key()),
+        farm_meta(a.reserve_farm_state.key()),
         AccountMeta::new_readonly(a.farms_program.key(), false),
     ];
 
