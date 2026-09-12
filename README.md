@@ -29,7 +29,8 @@ mints (Scaled UI Amount), and all accounting is done in raw token units.
 | --- | --- |
 | Vault core (`initialize_vault`, `deposit`, `withdraw`) | ✅ implemented + tested |
 | Share math (virtual offset, checked u128) | ✅ unit-tested |
-| Harvest (lending CPI + stablecoin strategy) | 🚧 in progress |
+| Harvest (yield accrual, authority-gated) | ✅ implemented |
+| Lending CPI as the yield source (Kamino) | 🚧 in progress |
 | Integration tests (LiteSVM / Surfpool mainnet fork) | 🚧 in progress |
 | Frontend | 🚧 planned |
 
@@ -64,6 +65,7 @@ cargo test -p stax    # run unit and integration tests
 | `initialize_vault` | Create a vault for a tokenized-stock mint (also creates the share mint and stock vault). |
 | `deposit(amount, min_shares_out)` | Deposit stock, mint shares (with slippage protection). |
 | `withdraw(shares, min_assets_out)` | Burn shares, redeem the underlying stock. |
+| `harvest` | Sweep realized yield into the vault (authority only), raising the value of every share. |
 
 ## Security
 

@@ -20,6 +20,8 @@ pub struct Vault {
     pub stock_vault: Pubkey,
     /// Raw amount of stock currently under management (stored accounting).
     pub total_assets: u64,
+    /// Cumulative yield swept into the vault over its lifetime (raw stock units).
+    pub total_yield: u64,
     /// Bump seed for the vault PDA.
     pub bump: u8,
 }

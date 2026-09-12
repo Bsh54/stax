@@ -3,7 +3,9 @@ use anchor_spl::token_interface::{
     self, Burn, Mint, TokenAccount, TokenInterface, TransferChecked,
 };
 
-use crate::{constants::*, error::StaxError, state::Vault, utils::shares_to_assets};
+use crate::{
+    constants::*, error::StaxError, events::WithdrawEvent, state::Vault, utils::shares_to_assets,
+};
 
 /// Accounts for burning vault shares and redeeming the underlying stock.
 #[derive(Accounts)]
@@ -96,6 +98,13 @@ pub fn handle_withdraw(ctx: Context<Withdraw>, shares: u64, min_assets_out: u64)
     ctx.accounts.vault.total_assets = total_assets
         .checked_sub(assets)
         .ok_or(StaxError::MathOverflow)?;
+
+    emit!(WithdrawEvent {
+        vault: ctx.accounts.vault.key(),
+        user: ctx.accounts.user.key(),
+        shares,
+        assets,
+    });
 
     msg!("Redeemed {} shares for {} stock", shares, assets);
     Ok(())

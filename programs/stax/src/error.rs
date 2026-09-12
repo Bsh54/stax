@@ -12,4 +12,6 @@ pub enum StaxError {
     InsufficientAssets,
     #[msg("Only the vault authority can perform this action")]
     Unauthorized,
+    #[msg("No yield available to harvest")]
+    NothingToHarvest,
 }

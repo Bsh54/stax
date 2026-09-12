@@ -4,7 +4,9 @@ use anchor_spl::{
     token_interface::{self, Mint, MintTo, TokenAccount, TokenInterface, TransferChecked},
 };
 
-use crate::{constants::*, error::StaxError, state::Vault, utils::assets_to_shares};
+use crate::{
+    constants::*, error::StaxError, events::DepositEvent, state::Vault, utils::assets_to_shares,
+};
 
 /// Accounts for depositing tokenized stock and minting vault shares.
 #[derive(Accounts)]
@@ -98,6 +100,13 @@ pub fn handle_deposit(ctx: Context<Deposit>, amount: u64, min_shares_out: u64) -
     ctx.accounts.vault.total_assets = total_assets
         .checked_add(amount)
         .ok_or(StaxError::MathOverflow)?;
+
+    emit!(DepositEvent {
+        vault: ctx.accounts.vault.key(),
+        user: ctx.accounts.user.key(),
+        assets: amount,
+        shares,
+    });
 
     msg!("Deposited {} stock, minted {} shares", amount, shares);
     Ok(())

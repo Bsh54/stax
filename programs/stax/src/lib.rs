@@ -1,5 +1,6 @@
 pub mod constants;
 pub mod error;
+pub mod events;
 pub mod instructions;
 pub mod state;
 pub mod utils;
@@ -32,5 +33,10 @@ pub mod stax {
     /// Burn vault shares and redeem the underlying tokenized stock.
     pub fn withdraw(ctx: Context<Withdraw>, shares: u64, min_assets_out: u64) -> Result<()> {
         instructions::withdraw::handle_withdraw(ctx, shares, min_assets_out)
+    }
+
+    /// Sweep realized yield into the vault, increasing the value of every share.
+    pub fn harvest(ctx: Context<Harvest>) -> Result<()> {
+        instructions::harvest::handle_harvest(ctx)
     }
 }
