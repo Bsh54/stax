@@ -30,7 +30,8 @@ mints (Scaled UI Amount), and all accounting is done in raw token units.
 | Vault core (`initialize_vault`, `deposit`, `withdraw`) | ✅ implemented + tested |
 | Share math (virtual offset, checked u128) | ✅ unit-tested |
 | Harvest (yield accrual, authority-gated) | ✅ implemented |
-| Lending CPI as the yield source (Kamino) | 🚧 in progress |
+| Kamino CPI — deposit stock as collateral (`init_kamino_position`, `deploy_to_kamino`) | ✅ implemented |
+| Kamino CPI — borrow stablecoin against collateral | 🚧 in progress |
 | Integration tests (LiteSVM / Surfpool mainnet fork) | 🚧 in progress |
 | Frontend | 🚧 planned |
 
