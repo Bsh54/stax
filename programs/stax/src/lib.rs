@@ -2,6 +2,7 @@ pub mod constants;
 pub mod error;
 pub mod events;
 pub mod instructions;
+pub mod kamino;
 pub mod state;
 pub mod utils;
 
@@ -38,5 +39,25 @@ pub mod stax {
     /// Sweep realized yield into the vault, increasing the value of every share.
     pub fn harvest(ctx: Context<Harvest>) -> Result<()> {
         instructions::harvest::handle_harvest(ctx)
+    }
+
+    /// One-time Kamino setup: create the vault's obligation and user metadata.
+    pub fn init_kamino_position(
+        ctx: Context<InitKaminoPosition>,
+        tag: u8,
+        id: u8,
+        user_lookup_table: Pubkey,
+    ) -> Result<()> {
+        instructions::init_kamino_position::handle_init_kamino_position(
+            ctx,
+            tag,
+            id,
+            user_lookup_table,
+        )
+    }
+
+    /// Deposit the vault's tokenized stock into Kamino as obligation collateral.
+    pub fn deploy_to_kamino(ctx: Context<DeployToKamino>, amount: u64) -> Result<()> {
+        instructions::deploy_to_kamino::handle_deploy_to_kamino(ctx, amount)
     }
 }
