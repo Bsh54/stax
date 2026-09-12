@@ -6,12 +6,14 @@
   "description": "TypeScript client and Surfpool integration tests for the Stax program",
   "scripts": {
     "resolve": "tsx src/resolveAccounts.ts",
-    "test:kamino": "tsx test/kaminoFlow.ts"
+    "test:init": "tsx test/initVault.ts",
+    "test:flow": "tsx test/depositWithdraw.ts"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.1",
     "@kamino-finance/klend-sdk": "^12.0.0",
     "@solana/kit": "^2.1.0",
+    "@solana/spl-token": "^0.4.15",
     "@solana/web3.js": "^1.98.0"
   },
   "devDependencies": {
