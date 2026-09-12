@@ -1,0 +1,21 @@
+{
+  "name": "stax-client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript client and Surfpool integration tests for the Stax program",
+  "scripts": {
+    "resolve": "tsx src/resolveAccounts.ts",
+    "test:kamino": "tsx test/kaminoFlow.ts"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.31.1",
+    "@kamino-finance/klend-sdk": "^12.0.0",
+    "@solana/kit": "^2.1.0",
+    "@solana/web3.js": "^1.98.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
