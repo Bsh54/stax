@@ -33,12 +33,11 @@ pub mod discriminator {
     pub const REDEEM_RESERVE_COLLATERAL: [u8; 8] = [234, 117, 181, 125, 185, 142, 220, 29];
 }
 
-/// Account meta for an optional klend farm account.
+/// Account meta for an optional klend account (farm state, referrer token state).
 ///
-/// Farm accounts are optional in klend: when a reserve has no farm they are set to
-/// the klend program id and must stay read-only; a real farm state account is
-/// writable.
-pub fn farm_meta(key: Pubkey) -> AccountMeta {
+/// klend encodes an unset optional account as the klend program id; that
+/// placeholder must stay read-only, while a real account is writable.
+pub fn optional_meta(key: Pubkey) -> AccountMeta {
     if key == KLEND_PROGRAM_ID {
         AccountMeta::new_readonly(key, false)
     } else {

@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount};
 use crate::{
     constants::*,
     error::StaxError,
-    kamino::{discriminator, farm_meta, invoke_klend_signed},
+    kamino::{discriminator, invoke_klend_signed, optional_meta},
     state::Vault,
 };
 
@@ -87,8 +87,8 @@ pub fn handle_repay_to_kamino(ctx: Context<RepayToKamino>, amount: u64) -> Resul
         AccountMeta::new(a.usdc_vault.key(), false), // user_source_liquidity
         AccountMeta::new_readonly(a.token_program.key(), false),
         AccountMeta::new_readonly(a.instruction_sysvar_account.key(), false),
-        farm_meta(a.obligation_farm_user_state.key()),
-        farm_meta(a.reserve_farm_state.key()),
+        optional_meta(a.obligation_farm_user_state.key()),
+        optional_meta(a.reserve_farm_state.key()),
         AccountMeta::new_readonly(a.lending_market_authority.key(), false),
         AccountMeta::new_readonly(a.farms_program.key(), false),
     ];

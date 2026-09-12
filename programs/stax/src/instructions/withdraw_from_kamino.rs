@@ -5,7 +5,7 @@ use anchor_spl::token_interface::{Mint, TokenAccount};
 use crate::{
     constants::*,
     error::StaxError,
-    kamino::{discriminator, farm_meta, invoke_klend_signed},
+    kamino::{discriminator, invoke_klend_signed, optional_meta},
     state::Vault,
 };
 
@@ -102,8 +102,8 @@ pub fn handle_withdraw_from_kamino(ctx: Context<WithdrawFromKamino>, amount: u64
         AccountMeta::new_readonly(a.collateral_token_program.key(), false),
         AccountMeta::new_readonly(a.liquidity_token_program.key(), false),
         AccountMeta::new_readonly(a.instruction_sysvar_account.key(), false),
-        farm_meta(a.obligation_farm_user_state.key()),
-        farm_meta(a.reserve_farm_state.key()),
+        optional_meta(a.obligation_farm_user_state.key()),
+        optional_meta(a.reserve_farm_state.key()),
         AccountMeta::new_readonly(a.farms_program.key(), false),
     ];
 
