@@ -4,7 +4,9 @@ pub mod deposit;
 pub mod harvest;
 pub mod init_kamino_position;
 pub mod initialize_vault;
+pub mod repay_to_kamino;
 pub mod withdraw;
+pub mod withdraw_from_kamino;
 
 pub use borrow_from_kamino::*;
 pub use deploy_to_kamino::*;
@@ -12,4 +14,6 @@ pub use deposit::*;
 pub use harvest::*;
 pub use init_kamino_position::*;
 pub use initialize_vault::*;
+pub use repay_to_kamino::*;
 pub use withdraw::*;
+pub use withdraw_from_kamino::*;

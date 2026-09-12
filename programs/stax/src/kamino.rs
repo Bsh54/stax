@@ -26,6 +26,9 @@ pub mod discriminator {
     pub const DEPOSIT_RESERVE_LIQUIDITY_AND_OBLIGATION_COLLATERAL_V2: [u8; 8] =
         [216, 224, 191, 27, 204, 151, 102, 175];
     pub const BORROW_OBLIGATION_LIQUIDITY_V2: [u8; 8] = [161, 128, 143, 245, 171, 199, 194, 6];
+    pub const REPAY_OBLIGATION_LIQUIDITY_V2: [u8; 8] = [116, 174, 213, 76, 180, 53, 210, 144];
+    pub const WITHDRAW_OBLIGATION_COLLATERAL_AND_REDEEM_RESERVE_COLLATERAL_V2: [u8; 8] =
+        [235, 52, 119, 152, 149, 197, 20, 7];
 }
 
 /// Build a klend instruction and dispatch it, signed by the vault PDA.

@@ -65,4 +65,14 @@ pub mod stax {
     pub fn borrow_from_kamino(ctx: Context<BorrowFromKamino>, amount: u64) -> Result<()> {
         instructions::borrow_from_kamino::handle_borrow_from_kamino(ctx, amount)
     }
+
+    /// Repay stablecoin debt on Kamino (deleverage / unwind before withdrawal).
+    pub fn repay_to_kamino(ctx: Context<RepayToKamino>, amount: u64) -> Result<()> {
+        instructions::repay_to_kamino::handle_repay_to_kamino(ctx, amount)
+    }
+
+    /// Withdraw the vault's tokenized stock back from Kamino collateral.
+    pub fn withdraw_from_kamino(ctx: Context<WithdrawFromKamino>, amount: u64) -> Result<()> {
+        instructions::withdraw_from_kamino::handle_withdraw_from_kamino(ctx, amount)
+    }
 }
