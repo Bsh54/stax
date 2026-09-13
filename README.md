@@ -10,6 +10,10 @@ traditional brokerage cannot offer.
 Built for the [Stocklana](https://hackathons.solana.com/hackathons/stocklana) hackathon
 (track: *Credit and yield*).
 
+**Live demo: https://stax.shadrakbessanh.me** (runs on a Solana mainnet fork with real Kamino and
+xStocks; a built-in demo account and faucet let anyone deposit and withdraw with test funds, no
+wallet setup required).
+
 ## How it works
 
 1. **Deposit** a tokenized stock into its vault and receive share tokens.
