@@ -133,6 +133,13 @@ pub fn handle_withdraw_from_kamino(ctx: Context<WithdrawFromKamino>, amount: u64
 
     invoke_klend_signed(data, metas, &infos, signer_seeds)?;
 
+    // The stock is back in stock_vault (liquid); reduce the deployed tally.
+    let vault = &mut ctx.accounts.vault;
+    vault.deployed_assets = vault
+        .deployed_assets
+        .checked_sub(amount)
+        .ok_or(StaxError::MathOverflow)?;
+
     msg!("Withdrew {} stock collateral from Kamino", amount);
     Ok(())
 }

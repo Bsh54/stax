@@ -60,6 +60,7 @@ pub fn handle_initialize_vault(ctx: Context<InitializeVault>) -> Result<()> {
     vault.share_mint = ctx.accounts.share_mint.key();
     vault.stock_vault = ctx.accounts.stock_vault.key();
     vault.total_assets = 0;
+    vault.deployed_assets = 0;
     vault.total_yield = 0;
     vault.bump = ctx.bumps.vault;
 

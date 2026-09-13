@@ -11,6 +11,7 @@
 import { readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import {
+  ComputeBudgetProgram,
   Connection,
   Keypair,
   PublicKey,
@@ -154,6 +155,7 @@ async function main() {
       farmsProgram: FARMS_PROGRAM,
     })
     .preInstructions([
+      ComputeBudgetProgram.setComputeUnitLimit({ units: 600_000 }),
       refreshReserveIx(stockReserve, stockScope),
       refreshReserveIx(usdcReserve, usdcScope),
       refreshObligationIx(obligation, [stockReserve]),

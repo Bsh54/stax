@@ -138,6 +138,13 @@ pub fn handle_deploy_to_kamino(ctx: Context<DeployToKamino>, amount: u64) -> Res
 
     invoke_klend_signed(data, metas, &infos, signer_seeds)?;
 
+    // Track the stock moved from liquid (stock_vault) into Kamino collateral.
+    let vault = &mut ctx.accounts.vault;
+    vault.deployed_assets = vault
+        .deployed_assets
+        .checked_add(amount)
+        .ok_or(StaxError::MathOverflow)?;
+
     msg!("Deployed {} stock to Kamino as collateral", amount);
     Ok(())
 }

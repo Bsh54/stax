@@ -5,12 +5,13 @@ use crate::{constants::*, error::StaxError, events::HarvestEvent, state::Vault};
 
 /// Accounts for harvesting realized yield into the vault.
 ///
-/// Yield is produced off the vault's stored accounting: a strategy returns
-/// additional stock to the vault's token account (in production, the proceeds of
-/// borrowing against the collateral and deploying them into a stablecoin yield
-/// strategy, converted back to the underlying). `harvest` reconciles the stored
-/// `total_assets` up to the vault's actual balance, so every share becomes
-/// redeemable for more stock. Only the vault authority may call it.
+/// The yield strategy (borrow a stablecoin against the Kamino collateral, deploy
+/// it into a stablecoin yield source, then convert the net proceeds back into the
+/// underlying stock) returns that stock to `stock_vault`. Any liquid balance
+/// beyond what should be liquid (`total_assets - deployed_assets`) is realized
+/// yield: `harvest` credits it to `total_assets`, so every share becomes
+/// redeemable for more stock. This works whether or not collateral is currently
+/// deployed. Only the vault authority may call it.
 #[derive(Accounts)]
 pub struct Harvest<'info> {
     pub authority: Signer<'info>,
@@ -34,15 +35,20 @@ pub struct Harvest<'info> {
 }
 
 pub fn handle_harvest(ctx: Context<Harvest>) -> Result<()> {
-    let actual_balance = ctx.accounts.stock_vault.amount;
-    let recorded = ctx.accounts.vault.total_assets;
+    let liquid = ctx.accounts.stock_vault.amount;
+    let total_assets = ctx.accounts.vault.total_assets;
+    let deployed = ctx.accounts.vault.deployed_assets;
 
-    // Any surplus over the stored accounting is realized yield.
-    let yield_amount = actual_balance.saturating_sub(recorded);
+    // Stock that should be sitting liquid in the vault (the rest is deployed).
+    let expected_liquid = total_assets.saturating_sub(deployed);
+    // Any liquid balance beyond that is realized yield returned by the strategy.
+    let yield_amount = liquid.saturating_sub(expected_liquid);
     require!(yield_amount > 0, StaxError::NothingToHarvest);
 
     let vault = &mut ctx.accounts.vault;
-    vault.total_assets = actual_balance;
+    vault.total_assets = total_assets
+        .checked_add(yield_amount)
+        .ok_or(StaxError::MathOverflow)?;
     vault.total_yield = vault
         .total_yield
         .checked_add(yield_amount)
@@ -52,6 +58,7 @@ pub fn handle_harvest(ctx: Context<Harvest>) -> Result<()> {
         vault: vault.key(),
         yield_amount,
         total_assets: vault.total_assets,
+        timestamp: Clock::get()?.unix_timestamp,
     });
 
     msg!(

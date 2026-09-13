@@ -106,6 +106,7 @@ pub fn handle_deposit(ctx: Context<Deposit>, amount: u64, min_shares_out: u64) -
         user: ctx.accounts.user.key(),
         assets: amount,
         shares,
+        timestamp: Clock::get()?.unix_timestamp,
     });
 
     msg!("Deposited {} stock, minted {} shares", amount, shares);

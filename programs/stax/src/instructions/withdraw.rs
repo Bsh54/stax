@@ -104,6 +104,7 @@ pub fn handle_withdraw(ctx: Context<Withdraw>, shares: u64, min_assets_out: u64)
         user: ctx.accounts.user.key(),
         shares,
         assets,
+        timestamp: Clock::get()?.unix_timestamp,
     });
 
     msg!("Redeemed {} shares for {} stock", shares, assets);

@@ -7,6 +7,7 @@ pub struct DepositEvent {
     pub user: Pubkey,
     pub assets: u64,
     pub shares: u64,
+    pub timestamp: i64,
 }
 
 /// Emitted when a user burns shares and redeems stock.
@@ -16,6 +17,7 @@ pub struct WithdrawEvent {
     pub user: Pubkey,
     pub shares: u64,
     pub assets: u64,
+    pub timestamp: i64,
 }
 
 /// Emitted when realized yield is swept into the vault.
@@ -24,4 +26,5 @@ pub struct HarvestEvent {
     pub vault: Pubkey,
     pub yield_amount: u64,
     pub total_assets: u64,
+    pub timestamp: i64,
 }
